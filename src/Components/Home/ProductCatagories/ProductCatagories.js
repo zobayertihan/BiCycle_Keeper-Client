@@ -1,10 +1,11 @@
 import React from 'react';
 import ProductCatagory from '../ProductCatagory/ProductCatagory';
+import { useQuery } from '@tanstack/react-query'
 
 const ProductCatagories = () => {
-    const { data: categories = [] } = useQuery({
-        queryKey: ['categories'],
-        queryFn: () => fetch(`http://localhost:5000/categories`)
+    const { data: catagories = [] } = useQuery({
+        queryKey: ['catagories'],
+        queryFn: () => fetch(`http://localhost:5000/catagories`)
             .then(res => res.json())
     })
     return (
@@ -16,8 +17,8 @@ const ProductCatagories = () => {
             <div className='grid place-items-center md:max-w-screen-lg md:mx-auto py-6'>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6 gap-6'>
                     {
-                        categories.map(category => <ProductCatagory key={category._id}
-                            category={category}
+                        catagories.map(catagory => <ProductCatagory key={catagory._id}
+                            catagory={catagory}
                         ></ProductCatagory>)
                     }
                 </div>
