@@ -1,49 +1,63 @@
 import React, { useContext, useState } from 'react';
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import toast from 'react-hot-toast'
 import useToken from '../../../Hooks/useToken';
-
+import { AuthContext } from '../../Contexts/AuthProvider';
 
 const Signup = () => {
-    const { createUser, updateUser, googleLogin } = useContext(AuthContext);
-    const [signUpError, setSignUpError] = useState('');
-    const navigate = useNavigate();
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { createUser, updateUser, setSignIn } = useContext(AuthContext);
+    const [signUpError, setSignUPError] = useState('');
     const [createdUserEmail, setCreatedUserEmail] = useState('')
     const [token] = useToken(createdUserEmail);
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
     if (token) {
         navigate('/');
     }
-    const handleSignup = (data) => {
-        setSignUpError('');
-        createUser(data.email, data.pass)
-            .then(result => {
-                const user = result.user;
-                console.log(user)
-                toast('User Created Successfully')
-                const userInfo = {
-                    displayName: data.name
+
+    const handleSignUp = (data) => {
+        setSignUPError('');
+
+        const image = data.image[0];
+        const formData = new FormData();
+        formData.append('image', image);
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(res => res.json())
+            .then(imageData => {
+                if (imageData.success) {
+                    createUser(data.email, data.password)
+                        .then(result => {
+                            const user = result.user;
+                            console.log(user);
+
+                            const userInfo = {
+                                displayName: data.name,
+                                photoURL: imageData.data.url,
+                            }
+                            console.log(userInfo)
+                            updateUser(userInfo)
+                                .then(() => {
+                                    setSignIn(userInfo)
+                                    saveUser(user?.displayName, user?.email, data.role);
+                                })
+                                .catch(error => console.log(error));
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            setSignUPError(error.message)
+                        });
                 }
-                updateUser(userInfo)
-                    .then(() => {
-                        saveUser(data.name, data.email);
-                    })
-                    .catch(e => setSignUpError(e))
             })
-            .catch(e => console.error(e))
+    };
 
-    }
-    const handleGoogleLogin = () => {
-        console.log('clicked')
-        googleLogin()
-            .then(() => { })
-            .catch(e => console.error(e))
-    }
-
-    const saveUser = (name, email) => {
-        const user = { name, email };
+    const saveUser = (name, email, role) => {
+        const user = { name, email, role };
         fetch('http://localhost:5000/users', {
             method: 'POST',
             headers: {
@@ -53,50 +67,61 @@ const Signup = () => {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 setCreatedUserEmail(email);
             })
     }
 
+
+
     return (
         <div className='h-[800px] flex justify-center items-center'>
-            <div className='w-96 p-10'>
-                <h2 className='text-4xl'>Sign Up</h2>
-                <form onSubmit={handleSubmit(handleSignup)}>
+            <div className='w-96 p-7'>
+                <h2 className='text-xl text-center'>Sign Up</h2>
+                <form onSubmit={handleSubmit(handleSignUp)}>
                     <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Name</span>
-                        </label>
-                        <input type="text" className="input input-bordered w-full max-w-xs" {...register("name", { required: 'Name is required' })} />
-                        {errors.name && <p className='text-red-600'>{errors.name?.message}</p>}
-                    </div>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Email</span>
-                        </label>
-                        <input type="email" className="input input-bordered w-full max-w-xs" {...register("email", { required: 'Email Address is required' })} />
-                        {errors.email && <p className='text-red-600'>{errors.email?.message}</p>}
+                        <label className="label"> <span className="label-text">Name</span></label>
+                        <input type="text" {...register("name", {
+                            required: "Name is Required"
+                        })} className="input input-bordered w-full max-w-xs" />
+                        {errors.name && <p className='text-red-500'>{errors.name.message}</p>}
                     </div>
                     <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Password</span>
-                        </label>
-                        <input type="password" className="input input-bordered w-full max-w-xs" {...register("pass", { required: 'Password is required', minLength: { value: 6, message: 'Password must be 6 characters or longer' }, pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z])/, message: 'Password Must have a uppercase a lowercase a number and a special character ' } })} />
-                        {errors.pass && <p className='text-red-600'>{errors.pass?.message}</p>}
+                        <label className="label"> <span className="label-text">Email</span></label>
+                        <input type="email" {...register("email", {
+                            required: true
+                        })} className="input input-bordered w-full max-w-xs" />
+                        {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
                     </div>
-                    <div>
-                        <label className="label">
-                            {
-                                signUpError &&
-                                <span className="label-text">{signUpError}</span>
-                            }
-                        </label>
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label"> <span className="label-text">Password</span></label>
+                        <input type="password" {...register("password", {
+                            required: "Password is required",
+                            minLength: { value: 6, message: "Password must be 6 characters long" },
+                            pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/, message: 'Password must have uppercase, number and special characters' }
+                        })} className="input input-bordered w-full max-w-xs" />
+                        {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
                     </div>
-                    <input className='btn btn-accent w-full mt-10' value={'SIgnup'} type="submit" />
+                    <div className='input input-bordered w-full max-w-xs'>
+                        Sign Up as
+                        <select {...register("role")} className='ml-3'>
+                            <option value="user">User</option>
+                            <option value="seller">Seller</option>
+                        </select>
+                    </div>
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label"> <span className="label-text">Image</span></label>
+                        <input type="file" {...register("image", {
+                            required: true
+                        })} className="input input-bordered w-full max-w-xs" />
+                        {errors.image && <p className='text-red-500'>{errors.image.message}</p>}
+                    </div>
+                    <input className='btn btn-accent w-full mt-4' value="Sign Up" type="submit" />
+                    {signUpError && <p className='text-red-600'>{signUpError}</p>}
                 </form>
-                <p className='text-center mt-5'>Already have an account? <Link className='text-primary' to={'/login'}>Sign in</Link></p>
-                <p className=' divider'>OR</p>
-                <button onClick={handleGoogleLogin} className='btn btn-ghost w-full btn-outline'>Continue With Google</button>
+                <p>Already have an account <Link className='text-secondary' to="/login">Please Login</Link></p>
+                <div className="divider">OR</div>
+                <button className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
+
             </div>
         </div>
     );
