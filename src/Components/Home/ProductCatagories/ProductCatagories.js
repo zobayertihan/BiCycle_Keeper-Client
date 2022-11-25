@@ -17,7 +17,7 @@ const ProductCatagories = () => {
             <div className='grid place-items-center md:max-w-screen-lg md:mx-auto py-6'>
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6 gap-6'>
                     {
-                        catagories.map(catagory => <ProductCatagory key={catagory._id}
+                        catagories?.map(catagory => <ProductCatagory key={catagory._id}
                             catagory={catagory}
                         ></ProductCatagory>)
                     }

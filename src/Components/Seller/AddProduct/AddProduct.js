@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
+import { AuthContext } from '../../Contexts/AuthProvider';
 
 const AddProduct = () => {
+    const { user } = useContext(AuthContext)
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [addProductError, setAddProductError] = useState('');
     const navigate = useNavigate();
@@ -30,7 +32,7 @@ const AddProduct = () => {
                         catagory: data.catagory,
                         productName: data.productName,
                         image: imageData.data.url,
-                        sellerName: data.sellerName,
+                        sellerName: user.displayName,
                         phone: data.phone,
                         location: data.location,
                         originalPrice: data.originalPrice,
