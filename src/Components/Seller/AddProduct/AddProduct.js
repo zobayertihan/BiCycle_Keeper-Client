@@ -3,9 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { AuthContext } from '../../Contexts/AuthProvider';
+import { useQuery } from '@tanstack/react-query'
+
 
 const AddProduct = () => {
-    const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext);
+    console.log(user)
+
+    // const { data: users = [] } = useQuery({
+    //     queryKey: ['users'],
+    //     queryFn: () => fetch(`http://localhost:5000/users/${user?.email}`)
+    //         .then(res => res.json())
+    // })
+    // console.log(users[0].isVerified)
+
+
     const { register, handleSubmit, formState: { errors } } = useForm();
     const [addProductError, setAddProductError] = useState('');
     const navigate = useNavigate();
@@ -33,6 +45,7 @@ const AddProduct = () => {
                         productName: data.productName,
                         image: imageData.data.url,
                         sellerName: user.displayName,
+                        sellerEmail: user.email,
                         phone: data.phone,
                         location: data.location,
                         originalPrice: data.originalPrice,
@@ -62,17 +75,38 @@ const AddProduct = () => {
             })
     };
 
+    const { data: catagories, isLoading } = useQuery({
+        queryKey: ['catagory'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:5000/catagories');
+            const data = await res.json();
+            return data;
+        }
+    })
+    console.log(catagories)
+
 
     return (
-        <div className='h-[800px] flex justify-center items-center'>
+        <div className='h-[800px] mt-32 flex justify-center items-center'>
             <div className='w-96 p-7'>
                 <h2 className='text-xl text-center'>Add a Product</h2>
                 <form onSubmit={handleSubmit(handleAddProduct)}>
                     <div className="form-control w-full max-w-xs">
                         <label className="label"> <span className="label-text">Catagory</span></label>
-                        <input type="text" {...register("catagory", {
-                            required: "Catagory is Required"
-                        })} className="input input-bordered w-full max-w-xs" />
+                        <div className='input input-bordered w-full max-w-xs'>
+                            <select
+                                {...register('catagory')}
+                                className="select input-bordered w-full max-w-xs">
+                                {
+                                    catagories?.map(catagory => <option
+                                        key={catagory._id}
+                                        value={catagory.catagoryName}
+                                    >{catagory.catagoryName}</option>)
+                                }
+
+
+                            </select>
+                        </div>
                         {errors.catagory && <p className='text-red-500'>{errors.catagory.message}</p>}
                     </div>
                     <div className="form-control w-full max-w-xs">
@@ -119,9 +153,13 @@ const AddProduct = () => {
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <label className="label"> <span className="label-text">Condition</span></label>
-                        <input type="text" {...register("condition", {
-                            required: true
-                        })} className="input input-bordered w-full max-w-xs" />
+                        <div className='input input-bordered w-full max-w-xs'>
+                            <select {...register("condition")} className='ml-3'>
+                                <option value="good">Good</option>
+                                <option value="well">Well</option>
+                                <option value="bad">Bad</option>
+                            </select>
+                        </div>
                         {errors.condition && <p className='text-red-500'>{errors.condition.message}</p>}
                     </div>
                     <div className="form-control w-full max-w-xs">

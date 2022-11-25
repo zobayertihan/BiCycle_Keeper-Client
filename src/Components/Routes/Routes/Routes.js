@@ -1,8 +1,15 @@
+import AllBuyer from "../../Dashboard/AllUsers/AllBuyer";
+import AllSeller from "../../Dashboard/AllUsers/AllSeller";
+import AllOrders from "../../Dashboard/Buyer/AllOrders";
 import Home from "../../Home/Home/Home";
 import DashboardLayout from "../../Layout/DashboardLayout";
+import Products from "../../Products/Products/Products";
 import AddProduct from "../../Seller/AddProduct/AddProduct";
+import AllProducts from "../../Seller/AllProducts/AllProducts";
 import Login from "../../User/Login/Login";
 import Signup from "../../User/Signup/Signup";
+import AdminRoute from "../usersRoute/AdminRoute/AdminRoute";
+import BuyerRoute from "../usersRoute/BuyerRoute/BuyerRoute";
 import SellerRoute from "../usersRoute/SellerRoute/SellerRoute";
 
 const { createBrowserRouter } = require("react-router-dom");
@@ -24,6 +31,10 @@ export const router = createBrowserRouter([
             {
                 path: '/signup',
                 element: <Signup></Signup>
+            },
+            {
+                path: `/catagory/:catagory`,
+                element: <Products></Products>,
             }
         ]
     },
@@ -34,6 +45,22 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/addproduct',
                 element: <SellerRoute><AddProduct></AddProduct></SellerRoute>
+            },
+            {
+                path: '/dashboard/allseller',
+                element: <AdminRoute><AllSeller></AllSeller></AdminRoute>
+            },
+            {
+                path: '/dashboard/allbuyer',
+                element: <AdminRoute><AllBuyer></AllBuyer></AdminRoute>
+            },
+            {
+                path: '/dashboard/allproducts',
+                element: <SellerRoute><AllProducts></AllProducts></SellerRoute>
+            },
+            {
+                path: '/dashboard/allorders',
+                element: <BuyerRoute><AllOrders></AllOrders></BuyerRoute>
             }
         ]
     }
