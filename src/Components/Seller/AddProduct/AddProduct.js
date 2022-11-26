@@ -89,14 +89,14 @@ const AddProduct = () => {
     return (
         <div className='h-[800px] mt-32 flex justify-center items-center'>
             <div className='w-96 p-7'>
-                <h2 className='text-xl text-center'>Add a Product</h2>
-                <form onSubmit={handleSubmit(handleAddProduct)}>
+                <h2 className='text-xl text-center mb-5 font-bold'>Add a Product</h2>
+                <form className='grid grid-cols-2 gap-6' onSubmit={handleSubmit(handleAddProduct)}>
                     <div className="form-control w-full max-w-xs">
                         <label className="label"> <span className="label-text">Catagory</span></label>
-                        <div className='input input-bordered w-full max-w-xs'>
+                        <div className=' w-full max-w-xs'>
                             <select
                                 {...register('catagory')}
-                                className="select input-bordered w-full max-w-xs">
+                                className="select input input-bordered">
                                 {
                                     catagories?.map(catagory => <option
                                         key={catagory._id}
@@ -120,7 +120,7 @@ const AddProduct = () => {
                         <label className="label"> <span className="label-text">Image</span></label>
                         <input type="file" {...register("image", {
                             required: true
-                        })} className="input input-bordered w-full max-w-xs" />
+                        })} className=" w-full max-w-xs" />
                         {errors.image && <p className='text-red-500'>{errors.image.message}</p>}
                     </div>
                     <div className="form-control w-full max-w-xs">
@@ -153,8 +153,8 @@ const AddProduct = () => {
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <label className="label"> <span className="label-text">Condition</span></label>
-                        <div className='input input-bordered w-full max-w-xs'>
-                            <select {...register("condition")} className='ml-3'>
+                        <div className='w-full max-w-xs'>
+                            <select {...register("condition")} className='ml-3 select input input-bordered '>
                                 <option value="good">Good</option>
                                 <option value="well">Well</option>
                                 <option value="bad">Bad</option>
