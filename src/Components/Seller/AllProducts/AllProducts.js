@@ -13,14 +13,16 @@ const AllProducts = () => {
                 return data.data
             })
     })
-    console.log(users);
+
     return (
         <div className=''>
 
             {
                 user?.email &&
                 users?.map(user =>
-                    <div key={user._id} className="card my-12 max-w-screen-md mx-auto bg-base-100 shadow-xl">
+                    <div
+                        key={user._id}
+                        className="card my-12 max-w-screen-md mx-auto bg-base-100 shadow-xl">
                         <figure><img className='cover' src={user.image} alt="Shoes" /></figure>
                         <div className="card-body">
                             <h2 className="card-title">{user.productName}</h2>
@@ -41,6 +43,7 @@ const AllProducts = () => {
                     </div>
                 )
             }
+
         </div>
     );
 };

@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthProvider';
+import { useQuery } from '@tanstack/react-query'
+import DeleteConfirmModal from '../../DeleteConfirmModal/DeleteConfirmModal';
+import toast from 'react-hot-toast'
+import VerifyConfirmModal from '../../VerifyConfirmModal/VerifyConfirmModal';
 
 
 const AllSeller = () => {
@@ -8,54 +12,52 @@ const AllSeller = () => {
     const [isSeller, setIsSeller] = useState([]);
     const [verified, setVerified] = useState('no');
     const navigate = useNavigate();
+    const [deletingSeller, setDeletingSeller] = useState(null);
+    const [verifySeller, setVerifySeller] = useState(null);
 
-    useEffect(() => {
-        fetch(`http://localhost:5000/users/allseller`)
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setIsSeller(data);
-            })
-    }, [user.email]);
+    const closeVerifyModal = () => {
+        setVerifySeller(null);
+    }
+    const closeModal = () => {
+        setDeletingSeller(null);
+    }
 
-    const seller = isSeller.filter(s => s.email === user?.email)
-
-
-    const handleVerify = (id) => {
-        const updateDate = {
-            isVerified: "yes"
+    const { data: allseller = [], refetch, isLoading } = useQuery({
+        queryKey: ['allseller'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:5000/users/allseller');
+            const data = await res.json();
+            return data;
         }
-        fetch(`http://localhost:5000/users/${id}`, {
-            method: 'PATCH',
+    });
+    const handleDeleteSeller = seller => {
+        fetch(`http://localhost:5000/users/${seller._id}`, {
+            method: 'DELETE',
             headers: {
-                'content-type': 'application/json',
-            },
-            body: JSON.stringify(updateDate)
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
-                if (data.modifiedCount > 0) {
-                    navigate('/dashboard/allseller')
+                if (data.deletedCount > 0) {
+                    refetch();
+                    toast.success(`${seller.name} deleted successfully`)
                 }
             })
     }
-
-    const handleRemove = id => {
-        fetch(`http://localhost:5000/users/${id}`, {
-            method: 'DELETE',
+    const handleVerifySeller = seller => {
+        fetch(`http://localhost:5000/users/seller/${seller._id}`, {
+            method: 'PUT',
             headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify()
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data)
-                console.log(seller)
-                const remaining = seller.filter(s => s._id !== id)
-                console.log(remaining)
-                setIsSeller(remaining)
+                if (data) {
+                    toast.success(`${seller.name} veryfied successfully`);
+                    refetch();
+                }
             })
     }
 
@@ -75,21 +77,51 @@ const AllSeller = () => {
                     <tbody>
 
                         {
-                            isSeller.map((seller, i) =>
-                                <tr>
+                            allseller.map((seller, i) =>
+                                < tr
+                                    key={seller._id}
+                                    setDeletingSeller={setDeletingSeller}
+                                >
                                     <th>{i + 1}</th>
                                     <td>{seller.name}</td>
                                     <td>{seller.email}</td>
-                                    <td><button className='btn btn-primary' onClick={() => handleVerify(seller._id)}>Verify</button></td>
-                                    <td><button onClick={() => handleRemove(seller._id)} className='btn btn-circle'>X</button></td>
+                                    < td >
+                                        <label className={seller?.status === true ? 'text-green-500' : 'text-red-500'}>
+                                            {
+                                                seller?.status === true ? 'Veryfied' : <label htmlFor='confirmation-modal' onClick={() => setVerifySeller(seller)} className='btn btn-circle'>Verify</label>
+                                            }
+                                        </label></td>
+                                    < td > <label htmlFor='confirmation-modal' onClick={() => setDeletingSeller(seller)} className='btn btn-circle'>X</label></td>
                                 </tr>
                             )
                         }
 
                     </tbody>
                 </table>
-            </div>
-        </div>
+                {
+                    deletingSeller && <DeleteConfirmModal
+                        title={`Are you sure you want to delete?`}
+                        message={`If you delete ${deletingSeller.name}. It cannot be undone.`}
+                        successAction={handleDeleteSeller}
+                        successButtonName="Delete"
+                        modalData={deletingSeller}
+                        closeModal={closeModal}
+                    >
+                    </DeleteConfirmModal>
+                }
+                {
+                    verifySeller && <VerifyConfirmModal
+                        title={`Do you want to procced?`}
+                        message={`${verifySeller.name} will be a verified seller.`}
+                        successAction={handleVerifySeller}
+                        successButtonName="Verify"
+                        modalData={verifySeller}
+                        closeModal={closeVerifyModal}
+                    >
+                    </VerifyConfirmModal>
+                }
+            </div >
+        </div >
     );
 };
 

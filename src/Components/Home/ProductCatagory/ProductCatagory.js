@@ -19,7 +19,7 @@ const ProductCatagory = ({ catagory }) => {
                     <p className="text-sm text-black">{details.slice(0, 250)}...</p>
                 </div>
                 <div className=''>
-                    <Link to={`/catagory/${catagoryName}/`} className="flex items-center justify-center w-full p-3 font-semibold rounded-md outline outline-1 hover:bg-gray-300 transition ease-in duration-200 text-black">View</Link>
+                    <Link to={`/catagory/${catagoryName}`} className="flex items-center justify-center w-full p-3 font-semibold rounded-md outline outline-1 hover:bg-gray-300 transition ease-in duration-200 text-black">View</Link>
                 </div>
             </div>
 

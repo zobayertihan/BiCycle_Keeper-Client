@@ -53,7 +53,7 @@ const AddProduct = () => {
                         condition: data.condition,
                         usedfor: data.usedfor,
                         postTime: postTime,
-                        isVerified: "No",
+                        isVerified: false,
                         description: data.description
                     }
 
@@ -69,7 +69,7 @@ const AddProduct = () => {
                         .then(result => {
                             console.log(result);
                             toast.success(`${data.productName} is added successfully`);
-                            navigate('/')
+                            navigate('/dashboard/allproducts')
                         })
                 }
             })

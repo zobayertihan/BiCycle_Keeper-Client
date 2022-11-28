@@ -2,17 +2,20 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthProvider';
 import toast from 'react-hot-toast';
+import ReportModal from '../../Modal/ReportModal/ReportModal';
+import BookingModal from '../../Modal/BookingModal/BookingModal';
 
 const Products = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-    const { catagory } = useParams();
+    const { catagory, categoryName } = useParams();
     const [catagories, setCatagories] = useState([]);
     const [phone, setPhone] = useState();
     const [location, setLocation] = useState();
     const date = new Date().toLocaleDateString();
     const time = new Date().toLocaleTimeString();
     const orderTime = `${date} ${time}`
+    console.log(catagory, categoryName)
     useEffect(() => {
         fetch(`http://localhost:5000/catagory/${catagory}`)
             .then(res => res.json())
@@ -20,6 +23,7 @@ const Products = () => {
                 setCatagories(data.data)
             })
     }, [catagory])
+    console.log(catagories)
     const hadleBookNow = (image, productName, price) => {
         const order = {
             name: user.displayName,
@@ -45,11 +49,69 @@ const Products = () => {
                 toast.success('Booking Confirmed')
             })
     }
+
+
+    // 
+    const [booking, setBooking] = useState(null);
+    const [products, setProducts] = useState([]);
+    const [productEmail, setProductEmail] = useState('');
+    const [veryfied, setVeryfied] = useState({});
+    const [reportProduct, setReportProduct] = useState(null);
+    const closeModal = () => {
+        setReportProduct(null);
+    }
+    useEffect(() => {
+        fetch(`http://localhost:5000/catagory/${catagory}`)
+            .then(res => res.json())
+            .then(data => {
+                setProducts(data.data)
+                if (data) {
+                    fetch(`http://localhost:5000/veryfied/seller/${productEmail}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data)
+                            setVeryfied(data)
+                        })
+                }
+            })
+    }, [catagory, productEmail])
+    console.log(products)
+    const handleReport = product => {
+        const order = {
+            user: user?.displayName,
+            email: user?.email,
+            productId: product._id,
+            productName: product.productName,
+            productSellerMail: product.sellerMail
+        }
+
+        fetch(`http://localhost:5000/report-items`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            },
+            body: JSON.stringify(order)
+        })
+            .then(res => res.json())
+            .then(data => {
+                toast.success('You  successfully.')
+                console.log(data);
+                setBooking(null);
+            })
+    }
+    // 
     return (
         <div className='mt-10'>
             {
-                catagories.map(cata =>
-                    <div key={cata._id} className="card my-12 max-w-screen-md mx-auto bg-base-100 shadow-xl">
+                products.map(cata =>
+                    <div key={cata._id}
+                        cata={cata}
+                        setProductEmail={setProductEmail}
+                        setReportProduct={setReportProduct}
+                        veryfied={veryfied}
+                        setBooking={setBooking}
+                        className="card my-12 max-w-screen-md mx-auto bg-base-100 shadow-xl">
                         <figure><img className='cover' src={cata.image} alt="Shoes" /></figure>
                         <div className="card-body">
                             <h2 className="card-title">{cata.productName}</h2>
@@ -96,6 +158,25 @@ const Products = () => {
                         </div>
                     </div>
                 )
+            }
+            {
+                reportProduct && <ReportModal
+                    title={`Are you sure you want to procced?`}
+                    message={`Do want to report ${reportProduct.productName}?`}
+                    successAction={handleReport}
+                    successButtonName="Confirm"
+                    modalData={reportProduct}
+                    closeModal={closeModal}
+                >
+                </ReportModal>
+            }
+            {
+
+                booking &&
+                <BookingModal
+                    booking={booking}
+                    setBooking={setBooking}
+                ></BookingModal>
             }
         </div>
     );
