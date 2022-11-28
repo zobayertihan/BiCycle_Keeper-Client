@@ -4,26 +4,25 @@ import { AuthContext } from '../../Contexts/AuthProvider';
 import toast from 'react-hot-toast';
 import ReportModal from '../../Modal/ReportModal/ReportModal';
 import BookingModal from '../../Modal/BookingModal/BookingModal';
+import { FaCheckCircle } from "react-icons/fa";
 
 const Products = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
-    const { catagory, categoryName } = useParams();
-    const [catagories, setCatagories] = useState([]);
+    const { catagory } = useParams();
+    // const [catagories, setCatagories] = useState([]);
     const [phone, setPhone] = useState();
     const [location, setLocation] = useState();
     const date = new Date().toLocaleDateString();
     const time = new Date().toLocaleTimeString();
     const orderTime = `${date} ${time}`
-    console.log(catagory, categoryName)
-    useEffect(() => {
-        fetch(`http://localhost:5000/catagory/${catagory}`)
-            .then(res => res.json())
-            .then(data => {
-                setCatagories(data.data)
-            })
-    }, [catagory])
-    console.log(catagories)
+    // useEffect(() => {
+    //     fetch(`http://localhost:5000/catagory/${catagoryName}`)
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             setCatagories(data.data)
+    //         })
+    // }, [catagory])
     const hadleBookNow = (image, productName, price) => {
         const order = {
             name: user.displayName,
@@ -65,7 +64,7 @@ const Products = () => {
             .then(res => res.json())
             .then(data => {
                 setProducts(data.data)
-                if (data) {
+                if (data.data) {
                     fetch(`http://localhost:5000/veryfied/seller/${productEmail}`)
                         .then(res => res.json())
                         .then(data => {
@@ -117,7 +116,7 @@ const Products = () => {
                             <h2 className="card-title">{cata.productName}</h2>
                             <div className='grid grid-cols-2'>
                                 <p>Seller Name: {cata.sellerName}</p>
-                                <p>{cata.isVerified ? 'verified' : ''}</p>
+                                <p>{veryfied?.status === 'Veryfied' ? <FaCheckCircle /> : ''}</p>
                             </div>
                             <div className='grid grid-cols-2'>
                                 <p>Phone: {cata.phone}</p>

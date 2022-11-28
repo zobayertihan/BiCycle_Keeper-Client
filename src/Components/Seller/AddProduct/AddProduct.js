@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-hot-toast'
 import { AuthContext } from '../../Contexts/AuthProvider';
 import { useQuery } from '@tanstack/react-query'
+import Loading from '../../Loading/Loading';
 
 
 const AddProduct = () => {
@@ -53,7 +54,6 @@ const AddProduct = () => {
                         condition: data.condition,
                         usedfor: data.usedfor,
                         postTime: postTime,
-                        isVerified: false,
                         description: data.description
                     }
 
@@ -84,6 +84,9 @@ const AddProduct = () => {
         }
     })
     console.log(catagories)
+    if (isLoading) {
+        return <Loading></Loading>
+    }
 
 
     return (

@@ -1,16 +1,18 @@
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useToken from '../../../Hooks/useToken';
 import { AuthContext } from '../../Contexts/AuthProvider';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const { createUser, updateUser, setSignIn } = useContext(AuthContext);
+    const { createUser, updateUser, setSignIn, googleLogin } = useContext(AuthContext);
     const [signUpError, setSignUPError] = useState('');
     const [createdUserEmail, setCreatedUserEmail] = useState('')
     const [token] = useToken(createdUserEmail);
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
     const navigate = useNavigate();
     const imageHostKey = process.env.REACT_APP_imgbb_key;
     if (token) {
@@ -45,7 +47,7 @@ const Signup = () => {
                             updateUser(userInfo)
                                 .then(() => {
                                     setSignIn(userInfo)
-                                    saveUser(user?.displayName, user?.email, data.role, false);
+                                    saveUser(user?.displayName, user?.email, data.role);
                                 })
                                 .catch(error => console.log(error));
                         })
@@ -57,8 +59,8 @@ const Signup = () => {
             })
     };
 
-    const saveUser = (name, email, role, status) => {
-        const user = { name, email, role, status };
+    const saveUser = (name, email, role) => {
+        const user = { name, email, role };
         fetch('http://localhost:5000/users', {
             method: 'POST',
             headers: {
@@ -70,6 +72,18 @@ const Signup = () => {
             .then(data => {
                 setCreatedUserEmail(email);
             })
+    }
+
+    const handleGoogleSignin = () => {
+        googleLogin().then(result => {
+            const user = result.user;
+            const speciality = {
+                role: 'buyer'
+            }
+            toast.success('Logged in Successfully.');
+            saveUser(user?.displayName, user?.email, speciality.role);
+            navigate(from, { replace: true })
+        })
     }
 
 
@@ -120,7 +134,7 @@ const Signup = () => {
                 </form>
                 <p>Already have an account <Link className='text-secondary' to="/login">Please Login</Link></p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handleGoogleSignin} className='btn btn-outline w-full'>CONTINUE WITH GOOGLE</button>
 
             </div>
         </div>

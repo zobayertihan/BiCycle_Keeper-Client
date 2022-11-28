@@ -5,12 +5,11 @@ import { useQuery } from '@tanstack/react-query'
 import DeleteConfirmModal from '../../DeleteConfirmModal/DeleteConfirmModal';
 import toast from 'react-hot-toast'
 import VerifyConfirmModal from '../../VerifyConfirmModal/VerifyConfirmModal';
+import Loading from '../../Loading/Loading';
 
 
 const AllSeller = () => {
     const { user } = useContext(AuthContext);
-    const [isSeller, setIsSeller] = useState([]);
-    const [verified, setVerified] = useState('no');
     const navigate = useNavigate();
     const [deletingSeller, setDeletingSeller] = useState(null);
     const [verifySeller, setVerifySeller] = useState(null);
@@ -60,6 +59,9 @@ const AllSeller = () => {
                 }
             })
     }
+    if (isLoading) {
+        return <Loading></Loading>
+    }
 
     return (
         <div>
@@ -88,7 +90,7 @@ const AllSeller = () => {
                                     < td >
                                         <label className={seller?.status === true ? 'text-green-500' : 'text-red-500'}>
                                             {
-                                                seller?.status === true ? 'Veryfied' : <label htmlFor='confirmation-modal' onClick={() => setVerifySeller(seller)} className='btn btn-circle'>Verify</label>
+                                                seller?.status === 'Veryfied' ? 'Veryfied' : <label htmlFor='confirmation-modal' onClick={() => setVerifySeller(seller)} className='btn btn-circle'>Verify</label>
                                             }
                                         </label></td>
                                     < td > <label htmlFor='confirmation-modal' onClick={() => setDeletingSeller(seller)} className='btn btn-circle'>X</label></td>

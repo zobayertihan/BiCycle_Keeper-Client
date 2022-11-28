@@ -8,6 +8,7 @@ import AddProduct from "../../Seller/AddProduct/AddProduct";
 import AllProducts from "../../Seller/AllProducts/AllProducts";
 import Login from "../../User/Login/Login";
 import Signup from "../../User/Signup/Signup";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import AdminRoute from "../usersRoute/AdminRoute/AdminRoute";
 import BuyerRoute from "../usersRoute/BuyerRoute/BuyerRoute";
 import SellerRoute from "../usersRoute/SellerRoute/SellerRoute";
@@ -34,7 +35,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: `/catagory/:catagory`,
-                element: <Products></Products>,
+                element: <PrivateRoute><Products></Products></PrivateRoute>,
             }
         ]
     },
