@@ -12,7 +12,7 @@ const ProductCatagories = () => {
         axios
             .get(`https://bikeserver.vercel.app/catagories`)
             .then(function (response) {
-                setCatagories(response.data.data)
+                setCatagories(response.data)
                 setLoading(false)
             })
 
