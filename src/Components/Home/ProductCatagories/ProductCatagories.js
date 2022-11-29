@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductCatagory from '../ProductCatagory/ProductCatagory';
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios';
+import Loading from '../../Loading/Loading';
+
 
 const ProductCatagories = () => {
-    const { data: catagories = [] } = useQuery({
-        queryKey: ['catagories'],
-        queryFn: () => fetch(`https://bikeserver.vercel.app/catagories`)
-            .then(res => res.json())
-    })
+    const [catagories, setCatagories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        axios
+            .get(`https://bikeserver.vercel.app/catagories`)
+            .then(function (response) {
+                setCatagories(response.data.data)
+                setLoading(false)
+            })
+
+    }, [])
+    // const { data: catagories = [] } = useQuery({
+    //     queryKey: ['catagories'],
+    //     queryFn: () => fetch(`https://bikeserver.vercel.app/catagories`)
+    //         .then(res => res.json())
+    // })
+    if (loading) {
+        return <Loading></Loading>
+    }
     return (
         <div>
             <div className='mt-16 flex flex-col items-center'>
