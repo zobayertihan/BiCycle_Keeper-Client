@@ -1,6 +1,8 @@
 import AllBuyer from "../../Dashboard/AllUsers/AllBuyer";
 import AllSeller from "../../Dashboard/AllUsers/AllSeller";
+import ReportedProducts from "../../Dashboard/AllUsers/ReportedProducts";
 import AllOrders from "../../Dashboard/Buyer/AllOrders";
+import ErrorPage from "../../ErrorPage/ErrorPage";
 import Home from "../../Home/Home/Home";
 import DashboardLayout from "../../Layout/DashboardLayout";
 import Payment from "../../Payment/Payment";
@@ -21,6 +23,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <Main></Main>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 path: '/',
@@ -43,6 +46,7 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: <DashboardLayout></DashboardLayout>,
+        errorElement: <ErrorPage></ErrorPage>,
         children: [
             {
                 path: '/dashboard/addproduct',
@@ -55,6 +59,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/allbuyer',
                 element: <AdminRoute><AllBuyer></AllBuyer></AdminRoute>
+            },
+            {
+                path: '/dashboard/allreportedproducts',
+                element: <AdminRoute><ReportedProducts></ReportedProducts></AdminRoute>
             },
             {
                 path: '/dashboard/allproducts',

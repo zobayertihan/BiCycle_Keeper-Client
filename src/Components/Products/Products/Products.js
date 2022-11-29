@@ -76,12 +76,13 @@ const Products = () => {
     }, [catagory, productEmail])
     console.log(products)
     const handleReport = product => {
+        console.log("PRODUCT:", product)
         const order = {
             user: user?.displayName,
             email: user?.email,
             productId: product._id,
             productName: product.productName,
-            productSellerMail: product.sellerMail
+            productSellerMail: product.sellerEmail
         }
 
         fetch(`http://localhost:5000/report-items`, {
@@ -127,7 +128,9 @@ const Products = () => {
                                 <p>Post Time:{cata.postTime}</p>
                             </div>
                             <p>{cata.description}</p>
-                            <div className="card-actions justify-end">
+
+                            <div className="card-actions justify-between">
+                                <label htmlFor="report-modal" onClick={() => setReportProduct(cata)} className='btn btn-red'>Report</label>
                                 <label htmlFor="bookingModal" className="btn btn-primary">Book Now</label>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ import React from 'react';
 const ReportModal = ({ title, message, successButtonName, closeModal, modalData, successAction }) => {
     return (
         <div>
-            <input type="checkbox" id="confirmation-modal" className="modal-toggle" />
+            <input type="checkbox" id="report-modal" className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box">
                     <h3 className="font-bold text-lg">{title}</h3>
@@ -11,7 +11,7 @@ const ReportModal = ({ title, message, successButtonName, closeModal, modalData,
                     <div className="modal-action">
                         <label
                             onClick={() => successAction(modalData)}
-                            htmlFor="confirmation-modal"
+                            htmlFor="report-modal"
                             className="btn btn-primary">{successButtonName}</label>
                         <button onClick={closeModal} className='btn btn-outline'>cancel</button>
                     </div>
