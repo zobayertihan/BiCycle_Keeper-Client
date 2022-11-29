@@ -26,7 +26,7 @@ const AllProducts = () => {
         queryKey: ['products'],
         queryFn: async () => {
             try {
-                const res = await fetch(`http://localhost:5000/products/${user?.email}`, {
+                const res = await fetch(`https://bikeserver.vercel.app/products/${user?.email}`, {
                     headers: {
                         authorization: `bearer ${localStorage.getItem('accessToken')}`
                     }
@@ -50,7 +50,7 @@ const AllProducts = () => {
             catagory: product.catagory
         }
 
-        fetch(`http://localhost:5000/advertisements`, {
+        fetch(`https://bikeserver.vercel.app/advertisements`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -67,7 +67,7 @@ const AllProducts = () => {
     }
 
     const handleDeleteProduct = product => {
-        fetch(`http://localhost:5000/products/${product._id}`, {
+        fetch(`https://bikeserver.vercel.app/products/${product._id}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json',
@@ -88,15 +88,12 @@ const AllProducts = () => {
     }
     console.log(products)
     return (
-        <div className=''>
-            <table className="w-full text-sm text-left text-gray-300">
-                <thead className="text-xs text-gray-200 uppercase bg-black">
+        <div className='md:max-w-screen-md mx-auto mt-10 overflow-x-auto shadow-md sm:rounded-md'>
+            <table className="w-full text-sm text-left text-gray-300 ">
+                <thead className="text-xs text-gray-800 uppercase bg-gray-400 border-b border-gray-700">
                     <tr>
                         <th scope="col" className="py-3 px-6">
                             Name
-                        </th>
-                        <th scope="col" className="py-3 px-20">
-                            Added
                         </th>
                         <th scope="col" className="py-3 px-8">
                             Advirtisement
@@ -113,22 +110,16 @@ const AllProducts = () => {
                             product={product}
                             setDeletingProduct={setDeletingProduct}
                             setAdvertisement={setAdvertisement}
-                            className=" border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" className="flex items-center py-4 px-4 pr-12 text-gray-900 whitespace-nowrap dark:text-white">
+                            className=" border-b bg-gray-200 border-gray-500">
+                            <th scope="row" className="flex items-center py-4 px-4 pr-12 text-gray-900 whitespace-nowrap dark:text-black">
                                 <img className="w-10 h-10 rounded-full" src={product.image} alt="" />
                                 <div className="pl-3">
                                     <div className="text-base font-semibold">{product.productName}</div>
-                                    <div className="font-normal text-gray-200">{product.category}</div>
+                                    <div className="font-normal text-gray-800">{product.category}</div>
                                 </div>
                             </th>
-                            <td className="py-4 px-12">
-                                <div className="flex items-center">
-                                    <div className="h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>
-                                    <div className='w-28'>{product.posttime}</div>
-                                </div>
-                            </td>
                             <td className="py-4 px-10">
-                                <label onClick={() => setAdvertisement(product)} htmlFor="confirmation-modal" title='Make Advertisement' className="text-gray-800 text-sm font-medium bg-amber-600 px-2 py-1 rounded-lg hover:text-gray-400 hover:bg-amber-800">Make Ad</label>
+                                <label onClick={() => setAdvertisement(product)} htmlFor="confirmation-modal" title='Make Advertisement' className="text-gray-800 text-sm font-medium bg-amber-400 px-2 py-1 rounded-lg hover:text-gray-800 hover:bg-amber-600">Make Ad</label>
                             </td>
                             <td className="py-4 px-6">
                                 <label onClick={() => setDeletingProduct(product)} htmlFor="confirmation-modal" title='Delete Product' className="text-2xl text-red-500"><AiFillDelete className='mx-4' /></label>

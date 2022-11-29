@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthProvider';
+import logo from '../../../Assets/logo.png'
 
 const Header = () => {
     const { user, logOut } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const Header = () => {
     }
     const menuItems = <React.Fragment>
         <li><Link to={'/'}>Home</Link></li>
+        <li><Link to={'/blog'}>Blog</Link></li>
         {
             user?.uid ?
                 <>
@@ -32,7 +34,9 @@ const Header = () => {
                         {menuItems}
                     </ul>
                 </div>
-                <Link to='/' className="btn btn-ghost normal-case text-xl">BiCycle Keeper</Link>
+                <div><img className=' avatar rounded-sm w-12' src={logo} alt="" />
+                    <Link to='/' className="btn btn-ghost normal-case text-xl">BiCycle Keeper</Link>
+                </div>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal p-0">

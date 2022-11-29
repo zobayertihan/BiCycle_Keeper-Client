@@ -18,7 +18,7 @@ const ReportedProducts = () => {
     const { data: reports = [], refetch, isLoading } = useQuery({
         queryKey: ['report'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/reports');
+            const res = await fetch('https://bikeserver.vercel.app/reports');
             const data = await res.json();
             return data;
         }
@@ -26,7 +26,7 @@ const ReportedProducts = () => {
 
     const handleDeleteProduct = products => {
         console.log(products)
-        fetch(`http://localhost:5000/products/${products.productId}`, {
+        fetch(`https://bikeserver.vercel.app/products/${products.productId}`, {
             method: 'DELETE',
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -39,7 +39,7 @@ const ReportedProducts = () => {
                 }
             })
 
-        fetch(`http://localhost:5000/reported-products/${products._id}`, {
+        fetch(`https://bikeserver.vercel.app/reported-products/${products._id}`, {
             method: 'DELETE',
             headers: {
                 'content-type': 'application/json',
@@ -62,7 +62,7 @@ const ReportedProducts = () => {
     return (
         <div className="md:max-w-screen-md mx-auto mt-10 overflow-x-auto shadow-md sm:rounded-md">
             <table className="w-full text-sm text-left text-gray-300">
-                <thead className="text-xs text-gray-200 uppercase bg-black">
+                <thead className="text-xs text-gray-900 uppercase bg-gray-400 bordrt-b border-gray-500">
                     <tr>
                         <th scope="col" className="py-3 px-6">
                             Reporter
@@ -85,18 +85,18 @@ const ReportedProducts = () => {
                                 key={report._id}
                                 report={report}
                                 setDeletingProduct={setDeletingProduct}
-                                className=" border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" className="flex items-center py-4 px-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                className=" border-b bg-gray-200 border-gray-500">
+                                <th scope="row" className="flex items-center py-4 px-4 text-black whitespace-nowrap">
                                     <div className="pl-3">
                                         <div className="text-base font-semibold">{report.user}</div>
-                                        <div className="font-normal text-gray-200">{report.email}</div>
+                                        <div className="font-normal text-gray-900">{report.email}</div>
                                     </div>
                                 </th>
                                 <td className="py-4 px-6">
-                                    <div className="text-base font-semibold">{report.productName}</div>
+                                    <div className="text-base text-gray-900 font-semibold">{report.productName}</div>
                                 </td>
                                 <td className="py-4 px-6">
-                                    <div className="text-base font-semibold">{report.productSellerMail}</div>
+                                    <div className="text-base text-gray-900 font-semibold">{report.productSellerMail}</div>
                                 </td>
                                 <td className="py-4 px-6">
                                     <div className='flex'>

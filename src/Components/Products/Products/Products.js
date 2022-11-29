@@ -17,7 +17,7 @@ const Products = () => {
     const time = new Date().toLocaleTimeString();
     const orderTime = `${date} ${time}`
     // useEffect(() => {
-    //     fetch(`http://localhost:5000/catagory/${catagoryName}`)
+    //     fetch(`https://bikeserver.vercel.app/catagory/${catagoryName}`)
     //         .then(res => res.json())
     //         .then(data => {
     //             setCatagories(data.data)
@@ -34,7 +34,7 @@ const Products = () => {
             phone,
             location
         }
-        fetch(`http://localhost:5000/orders`, {
+        fetch(`https://bikeserver.vercel.app/orders`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -60,12 +60,12 @@ const Products = () => {
         setReportProduct(null);
     }
     useEffect(() => {
-        fetch(`http://localhost:5000/catagory/${catagory}`)
+        fetch(`https://bikeserver.vercel.app/catagory/${catagory}`)
             .then(res => res.json())
             .then(data => {
                 setProducts(data.data)
                 if (data.data) {
-                    fetch(`http://localhost:5000/veryfied/seller/${productEmail}`)
+                    fetch(`https://bikeserver.vercel.app/veryfied/seller/${productEmail}`)
                         .then(res => res.json())
                         .then(data => {
                             console.log(data)
@@ -85,7 +85,7 @@ const Products = () => {
             productSellerMail: product.sellerEmail
         }
 
-        fetch(`http://localhost:5000/report-items`, {
+        fetch(`https://bikeserver.vercel.app/report-items`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',

@@ -13,7 +13,7 @@ const Payment = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        fetch(`http://localhost:5000/orders/payment/${id}`)
+        fetch(`https://bikeserver.vercel.app/orders/payment/${id}`)
             .then(res => res.json())
             .then(data => {
                 console.log(data)

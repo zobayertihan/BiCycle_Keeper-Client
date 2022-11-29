@@ -6,6 +6,7 @@ import DeleteConfirmModal from '../../DeleteConfirmModal/DeleteConfirmModal';
 import toast from 'react-hot-toast'
 import VerifyConfirmModal from '../../VerifyConfirmModal/VerifyConfirmModal';
 import Loading from '../../Loading/Loading';
+import { AiFillDelete } from "react-icons/ai";
 
 
 const AllSeller = () => {
@@ -24,13 +25,13 @@ const AllSeller = () => {
     const { data: allseller = [], refetch, isLoading } = useQuery({
         queryKey: ['allseller'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/users/allseller');
+            const res = await fetch('https://bikeserver.vercel.app/users/allseller');
             const data = await res.json();
             return data;
         }
     });
     const handleDeleteSeller = seller => {
-        fetch(`http://localhost:5000/users/${seller._id}`, {
+        fetch(`https://bikeserver.vercel.app/users/${seller._id}`, {
             method: 'DELETE',
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -45,7 +46,7 @@ const AllSeller = () => {
             })
     }
     const handleVerifySeller = seller => {
-        fetch(`http://localhost:5000/users/seller/${seller._id}`, {
+        fetch(`https://bikeserver.vercel.app/users/seller/${seller._id}`, {
             method: 'PUT',
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -64,7 +65,7 @@ const AllSeller = () => {
     }
 
     return (
-        <div>
+        <div className='md:max-w-screen-md mx-auto mt-10 overflow-x-auto shadow-md sm:rounded-md'>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
@@ -88,12 +89,12 @@ const AllSeller = () => {
                                     <td>{seller.name}</td>
                                     <td>{seller.email}</td>
                                     < td >
-                                        <label className={seller?.status === true ? 'text-green-500' : 'text-red-500'}>
+                                        <label className={seller?.status === true ? 'text-red-500 font-semibold' : 'text-green-500 font-semibold'}>
                                             {
-                                                seller?.status === 'Veryfied' ? 'Veryfied' : <label htmlFor='confirmation-modal' onClick={() => setVerifySeller(seller)} className='btn btn-circle'>Verify</label>
+                                                seller?.status === 'Veryfied' ? 'Veryfied' : <label htmlFor='confirmation-modal' onClick={() => setVerifySeller(seller)} className='btn bg-white text-black hover:bg-black hover:text-white'>Verify</label>
                                             }
                                         </label></td>
-                                    < td > <label htmlFor='confirmation-modal' onClick={() => setDeletingSeller(seller)} className='btn btn-circle'>X</label></td>
+                                    < td > <label htmlFor='confirmation-modal' onClick={() => setDeletingSeller(seller)} className='btn btn-ghost text-2xl text-red-500'><AiFillDelete className='mx-1 w-5 h-12' /></label></td>
                                 </tr>
                             )
                         }

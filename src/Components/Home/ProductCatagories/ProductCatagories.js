@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 const ProductCatagories = () => {
     const { data: catagories = [] } = useQuery({
         queryKey: ['catagories'],
-        queryFn: () => fetch(`http://localhost:5000/catagories`)
+        queryFn: () => fetch(`https://bikeserver.vercel.app/catagories`)
             .then(res => res.json())
     })
     return (

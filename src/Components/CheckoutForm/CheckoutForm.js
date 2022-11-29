@@ -19,7 +19,7 @@ const CheckoutForm = ({ booking }) => {
 
     useEffect(() => {
         // Create PaymentIntent as soon as the page loads
-        fetch("http://localhost:5000/create-payment-intent", {
+        fetch("https://bikeserver.vercel.app/create-payment-intent", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const CheckoutForm = ({ booking }) => {
                 email,
                 bookingId: _id
             }
-            fetch('http://localhost:5000/payments', {
+            fetch('https://bikeserver.vercel.app/payments', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -99,7 +99,7 @@ const CheckoutForm = ({ booking }) => {
                 .then(data => {
                     console.log(data);
                     if (data.insertedId) {
-                        fetch(`http://localhost:5000/stockout/${bookingId}`, {
+                        fetch(`https://bikeserver.vercel.app/stockout/${bookingId}`, {
                             method: 'PATCH',
                             headers: {
                                 'content-type': 'application/json',
@@ -141,7 +141,7 @@ const CheckoutForm = ({ booking }) => {
                     }}
                 />
                 <button
-                    className='btn btn-sm mt-4 bg-sky-500 border-none'
+                    className='btn btn-sm mt-4 text-white bg-sky-500 border-none'
                     type="submit"
                     disabled={!stripe || !clientSecret || processing}>
                     Pay

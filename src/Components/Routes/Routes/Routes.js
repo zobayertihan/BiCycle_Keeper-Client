@@ -1,3 +1,4 @@
+import Blog from "../../Blog/Blog";
 import AllBuyer from "../../Dashboard/AllUsers/AllBuyer";
 import AllSeller from "../../Dashboard/AllUsers/AllSeller";
 import ReportedProducts from "../../Dashboard/AllUsers/ReportedProducts";
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
             {
                 path: `/catagory/:catagory`,
                 element: <PrivateRoute><Products></Products></PrivateRoute>,
+            },
+            {
+                path: '/blog',
+                element: <Blog></Blog>
             }
         ]
     },

@@ -13,7 +13,7 @@ const AddProduct = () => {
 
     // const { data: users = [] } = useQuery({
     //     queryKey: ['users'],
-    //     queryFn: () => fetch(`http://localhost:5000/users/${user?.email}`)
+    //     queryFn: () => fetch(`https://bikeserver.vercel.app/users/${user?.email}`)
     //         .then(res => res.json())
     // })
     // console.log(users[0].isVerified)
@@ -57,7 +57,7 @@ const AddProduct = () => {
                         description: data.description
                     }
 
-                    fetch(`http://localhost:5000/products`, {
+                    fetch(`https://bikeserver.vercel.app/products`, {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',
@@ -78,7 +78,7 @@ const AddProduct = () => {
     const { data: catagories, isLoading } = useQuery({
         queryKey: ['catagory'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/catagories');
+            const res = await fetch('https://bikeserver.vercel.app/catagories');
             const data = await res.json();
             return data;
         }
@@ -90,7 +90,7 @@ const AddProduct = () => {
 
 
     return (
-        <div className='h-[800px] mt-32 flex justify-center items-center'>
+        <div className=' bg-gray-200 flex justify-center items-center'>
             <div className='w-96 p-7'>
                 <h2 className='text-xl text-center mb-5 font-bold'>Add a Product</h2>
                 <form className='grid grid-cols-2 gap-6' onSubmit={handleSubmit(handleAddProduct)}>

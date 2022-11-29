@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import DeleteConfirmModal from '../../DeleteConfirmModal/DeleteConfirmModal';
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom';
+import { AiFillDelete } from "react-icons/ai";
 
 
 
@@ -20,7 +21,7 @@ const AllOrders = () => {
     }
     const handleDeleteOrder = order => {
         console.log(order._id)
-        fetch(`http://localhost:5000/orders/${order._id}`, {
+        fetch(`https://bikeserver.vercel.app/orders/${order._id}`, {
             method: 'DELETE',
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -34,23 +35,11 @@ const AllOrders = () => {
                 }
             })
     }
-    // useEffect(() => {
-    //     fetch(`http://localhost:5000/orders/${user?.email}`, {
-    //         headers: {
-    //             authorization: `bearer ${localStorage.getItem('accessToken')}`
-    //         }
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             setOrders(data.data)
-    //         })
-    // }, [user.email])
-
     const { data: myorders = [], refetch, isLoading } = useQuery({
         queryKey: ['myorders'],
         queryFn: async () => {
             try {
-                const res = await fetch(`http://localhost:5000/orders/${user?.email}`, {
+                const res = await fetch(`https://bikeserver.vercel.app/orders/${user?.email}`, {
                     headers: {
                         authorization: `bearer ${localStorage.getItem('accessToken')}`
                     }
@@ -66,7 +55,7 @@ const AllOrders = () => {
 
     console.log(orders)
     return (
-        <div>
+        <div className='md:max-w-screen-md mx-auto mt-10 overflow-x-auto shadow-md sm:rounded-md'>
             <div className="overflow-x-auto">
                 <table className="table w-full">
                     <thead>
@@ -104,16 +93,16 @@ const AllOrders = () => {
                                             {
                                                 order.price && !order.paid && <Link to={`/dashboard/allorders/payment/${order._id}`}>
                                                     <button
-                                                        className='btn bg-sky-500 border-none btn-sm'
+                                                        className='btn bg-sky-500 border-none btn-sm text-white'
                                                     >Pay</button>
                                                 </Link>
                                             }
                                             {
-                                                order.price && order.paid && <button className='flex items-center justify-center w-full p-1 font-semibold tracking-wide rounded-md bg-sky-600 hover:bg-sky-700 text-gray-100 '>Paid</button>
+                                                order.price && order.paid && <button className='flex items-center justify-center w-full p-1 font-semibold tracking-wide rounded-md bg-sky-600 hover:bg-sky-700 text-white '>Paid</button>
                                             }
                                         </div>
                                     </td></td>
-                                    <td><label htmlFor="confirmation-modal" onClick={() => setDeletingOrder(order)} className='btn btn-circle'>X</label></td>
+                                    <td><label htmlFor="confirmation-modal" onClick={() => setDeletingOrder(order)} className='btn btn-ghost text-2xl text-red-500'><AiFillDelete className='mx-1 w-5 h-12' /></label></td>
                                 </tr>
                             )
                         }
