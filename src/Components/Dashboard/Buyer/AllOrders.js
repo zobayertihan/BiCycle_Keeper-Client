@@ -5,6 +5,7 @@ import 'react-photo-view/dist/react-photo-view.css';
 import toast from 'react-hot-toast'
 import DeleteConfirmModal from '../../DeleteConfirmModal/DeleteConfirmModal';
 import { useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom';
 
 
 
@@ -98,7 +99,20 @@ const AllOrders = () => {
                                     <td>{order.productName}</td>
                                     <td>{order.price}</td>
                                     <td>{order.orderTime}</td>
-                                    <td><button className='btn btn-primary'>Buy Now</button></td>
+                                    <td><td className="py-4 px-6">
+                                        <div className='flex'>
+                                            {
+                                                order.price && !order.paid && <Link to={`/dashboard/allorders/payment/${order._id}`}>
+                                                    <button
+                                                        className='btn bg-sky-500 border-none btn-sm'
+                                                    >Pay</button>
+                                                </Link>
+                                            }
+                                            {
+                                                order.price && order.paid && <button className='flex items-center justify-center w-full p-1 font-semibold tracking-wide rounded-md bg-sky-600 hover:bg-sky-700 text-gray-100 '>Paid</button>
+                                            }
+                                        </div>
+                                    </td></td>
                                     <td><label htmlFor="confirmation-modal" onClick={() => setDeletingOrder(order)} className='btn btn-circle'>X</label></td>
                                 </tr>
                             )

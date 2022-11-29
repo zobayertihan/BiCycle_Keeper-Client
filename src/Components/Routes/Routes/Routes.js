@@ -3,6 +3,7 @@ import AllSeller from "../../Dashboard/AllUsers/AllSeller";
 import AllOrders from "../../Dashboard/Buyer/AllOrders";
 import Home from "../../Home/Home/Home";
 import DashboardLayout from "../../Layout/DashboardLayout";
+import Payment from "../../Payment/Payment";
 import Products from "../../Products/Products/Products";
 import AddProduct from "../../Seller/AddProduct/AddProduct";
 import AllProducts from "../../Seller/AllProducts/AllProducts";
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/allorders',
                 element: <BuyerRoute><AllOrders></AllOrders></BuyerRoute>
+            },
+            {
+                path: '/dashboard/allorders/payment/:id',
+                element: <Payment></Payment>
             }
         ]
     }
